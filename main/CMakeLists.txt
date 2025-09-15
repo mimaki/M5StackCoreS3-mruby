@@ -1,0 +1,14 @@
+idf_component_register(
+    SRCS
+        "main.cpp"
+        "mirb.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        fatfs
+        sdmmc
+        driver
+        M5Unified
+        M5CUtil
+        mruby_component
+)
