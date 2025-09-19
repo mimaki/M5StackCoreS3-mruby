@@ -5,6 +5,9 @@ all:
 flash:
 	idf.py flash
 
+config:
+	idf.py menuconfig
+
 clean:
 	idf.py fullclean clean
 

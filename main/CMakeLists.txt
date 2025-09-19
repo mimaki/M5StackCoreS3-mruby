@@ -2,12 +2,14 @@ idf_component_register(
     SRCS
         "main.cpp"
         "mirb.cpp"
+        "gatt.c"
     INCLUDE_DIRS
         "."
     REQUIRES
         fatfs
         sdmmc
         driver
+        bt
         M5Unified
         M5CUtil
         mruby_component

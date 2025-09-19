@@ -230,6 +230,11 @@ void app_main(void)
 //   }
 // #endif
 
+  // BLE GATTサーバー起動
+  extern void gatt_app_main(void);
+  gatt_app_main();
+
+  // mrubyタスク起動
   xTaskCreate(mrubyTask, "mrubyTask", 16384, NULL, 5, NULL);
 
   while (true) {
