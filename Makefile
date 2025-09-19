@@ -1,4 +1,5 @@
 all:
+	mkdir -p components/mruby_component/mruby/build/esp32/include
 	idf.py build
 
 flash:
