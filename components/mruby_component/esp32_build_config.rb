@@ -92,6 +92,7 @@ MRuby::CrossBuild.new('esp32') do |conf|
   # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-i2c-esp32.git"
   # conf.gem :git => "https://github.com/mimaki/mruby-m5stack-i2c.git"
 
+  conf.gem :core => "../../../../mrbgems/mruby-m5stack-gpio"
   conf.gem :core => "../../../../mrbgems/mruby-stdio-m5stack"
   conf.gem :core => "../../../../mrbgems/mruby-sleep-esp32"
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-i2c"
