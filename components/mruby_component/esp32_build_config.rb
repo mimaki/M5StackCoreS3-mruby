@@ -95,5 +95,7 @@ MRuby::CrossBuild.new('esp32') do |conf|
   conf.gem :core => "../../../../mrbgems/mruby-stdio-m5stack"
   conf.gem :core => "../../../../mrbgems/mruby-sleep-esp32"
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-i2c"
+  conf.gem :core => "../../../../mrbgems/mruby-m5stack-ble-gatt"
+  conf.gem :core => "../../../../mrbgems/mruby-m5stack-lcd"
 
 end

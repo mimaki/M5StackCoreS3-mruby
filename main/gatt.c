@@ -11,6 +11,7 @@
 #include "esp_bt_main.h"
 #include "esp_bt_device.h"
 #include "esp_gatt_common_api.h"
+#include "M5CUtil.h"
 
 #define GATTS_TAG "M5CS3_GATTS"
 
@@ -32,10 +33,15 @@ static uint16_t gatt_char_handle;
 static esp_bt_uuid_t gatt_char_uuid;
 
 static esp_gatt_if_t gatts_if_global = 0;
-static uint16_t conn_id = 0;
-static bool notify_enabled = false;
+#define INVALID_CONN_ID  0xffff
+static uint16_t conn_id = INVALID_CONN_ID;
+static volatile bool notify_enabled = false;
 
-static uint8_t char_value[20] = "Hello CoreS3!";
+#define CHAR_BUFFER_SIZE 20
+static uint8_t char_value[CHAR_BUFFER_SIZE] = {0};
+
+#define WRITE_BUFFER_SIZE 32
+uint8_t gattWriteBuffer[WRITE_BUFFER_SIZE];
 
 /// ADV parameters
 static esp_ble_adv_params_t adv_params = {
@@ -185,13 +191,18 @@ static void gatts_event_handler(esp_gatts_cb_event_t event,
     case ESP_GATTS_WRITE_EVT:
     {
         if (param->write.handle == gatt_char_handle + 1) { // CCCD
-            if (param->write.len == 2 && param->write.value[0] == 1) {
-                notify_enabled = true;
-                ESP_LOGI(GATTS_TAG, "Notify enabled");
-            } else {
-                notify_enabled = false;
-                ESP_LOGI(GATTS_TAG, "Notify disabled");
-            }
+            // if (param->write.len == 2 && param->write.value[0] == 1) {
+            //     notify_enabled = true;
+            //     ESP_LOGI(GATTS_TAG, "Notify enabled");
+            // } else {
+            //     notify_enabled = false;
+            //     ESP_LOGI(GATTS_TAG, "Notify disabled");
+            // }
+            size_t len = param->write.len;
+            if (len > sizeof(gattWriteBuffer)-1) len = sizeof(gattWriteBuffer)-1;
+            memcpy(gattWriteBuffer, param->write.value, len);
+            gattWriteBuffer[len] = 0;
+            ESP_LOGI(GATTS_TAG, "Write: %s", gattWriteBuffer);
         }
         break;
     }
@@ -206,13 +217,72 @@ void notify_task(void *pvParameter)
 {
     while (1) {
         if (notify_enabled) {
-            snprintf((char *)char_value, sizeof(char_value), "Tick %lu", (unsigned long)xTaskGetTickCount());
+            // snprintf((char *)char_value, sizeof(char_value), "Tick %lu", (unsigned long)xTaskGetTickCount());
             esp_ble_gatts_send_indicate(gatts_if_global, conn_id, gatt_char_handle,
                                         strlen((char *)char_value), char_value, false);
-            ESP_LOGI(GATTS_TAG, "Notify: %s", char_value);
+            // ESP_LOGI(GATTS_TAG, "Notify: %s", char_value);
+            m5printf("Notify: %s\n", char_value);
+            notify_enabled = false;
         }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        // vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
+}
+
+void GattNotify(uint16_t, uint8_t*, size_t);
+uint8_t *GetGattWriteData(uint16_t);
+uint8_t IsBLEConnected(uint16_t);
+
+// GattNotify
+// Notify GATT characteristic value
+// params
+//  id: Connection ID
+//  data:   Data to send
+//  length: Length of send data
+// return
+//  none
+void GattNotify(uint16_t id, uint8_t *data, size_t length)
+{
+  if (IsBLEConnected(id)) {
+    // 接続中の場合のみNotifyする
+    // esp_ble_gatts_send_indicate(gatts_if_global, conn_id, gatt_char_handle,
+    //   length, data, false);
+
+    length = (length < CHAR_BUFFER_SIZE-1) ? length : CHAR_BUFFER_SIZE-1;
+    // snprintf((char *)char_value, sizeof(char_value), "%s", data);
+    memcpy(char_value, data, length);
+    char_value[length] = 0;
+
+    m5printf("GattNotify: %s\n", char_value);
+    notify_enabled = true;
+  }
+}
+
+// GetGattWriteData
+// params
+//  id: Connection ID
+// return
+//  Pointer to GATT write data
+static const uint8_t gattEmpty[] = "";
+uint8_t *GetGattWriteData(uint16_t id)
+{
+  if (IsBLEConnected(id)) {
+    // Get write buffer
+    extern uint8_t gattWriteBuffer[];
+    return gattWriteBuffer;
+  }
+  return (uint8_t*)gattEmpty;
+}
+
+// IsBLEConnected
+// Check BLE conenction
+// params
+//  id: Connection ID
+// return
+//  TRUE: connected, FALSE: not connect
+uint8_t IsBLEConnected(uint16_t id)
+{
+  return conn_id != INVALID_CONN_ID;
 }
 
 // void app_main(void)
