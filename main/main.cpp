@@ -129,6 +129,9 @@ void mrubyTask(void *pvParameters)
   // M5.Lcd.setTextSize(2);      // フォントサイズ設定
   M5.Lcd.setTextScroll(true); // スクロール有効化
 
+  // GPIO初期化
+  m5gpio_init();
+
   // SDカード初期化
   SDInit();
   m5printf("SD card initialed.\n");
