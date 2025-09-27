@@ -4,6 +4,7 @@
 #include "mruby/class.h"
 #include "mruby/string.h"
 #include <string.h>
+#include <M5CUtil.h>
 
 // M5.lcd.setBrightness(uint8_t brightness);
 static mrb_value
@@ -11,7 +12,7 @@ mrb_lcd_set_brightness(mrb_state *mrb, mrb_value self)
 {
   mrb_int b;
   mrb_get_args(mrb, "i", &b);
-//   M5.Lcd.setBrightness(b);
+  m5lcd_set_brightness((uint8_t)b);
   return self;
 }
 
@@ -21,7 +22,7 @@ mrb_lcd_pixel(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, c;
   mrb_get_args(mrb, "iii", &x, &y, &c);
-//   M5.Lcd.drawPixel(x, y, c);
+  m5lcd_draw_pixel(x, y, (uint16_t)c);
   return self;
 }
 
@@ -31,7 +32,7 @@ mrb_lcd_line(mrb_state *mrb, mrb_value self)
 {
   mrb_int x1, y1, x2, y2, c;
   mrb_get_args(mrb, "iiiii", &x1, &y1, &x2, &y2, &c);
-//   M5.Lcd.drawLine(x1, y1, x2, y2, c);
+  m5lcd_draw_line(x1, y1, x2, y2, (uint16_t)c);
   return self;
 }
 
@@ -41,7 +42,7 @@ mrb_lcd_draw_rect(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, w, h, c;
   mrb_get_args(mrb, "iiiii", &x, &y, &w, &h, &c);
-//   M5.Lcd.drawRect(x, y, w, h, c);
+  m5lcd_draw_rect(x, y, w, h, (uint16_t)c);
   return self;
 }
 
@@ -51,7 +52,7 @@ mrb_lcd_fill_rect(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, w, h, c;
   mrb_get_args(mrb, "iiiii", &x, &y, &w, &h, &c);
-//   M5.Lcd.fillRect(x, y, w, h, c);
+  m5lcd_fill_rect(x, y, w, h, (uint16_t)c);
   return self;
 }
 
@@ -61,15 +62,14 @@ mrb_lcd_fill_screen(mrb_state *mrb, mrb_value self)
 {
   mrb_int c;
   mrb_get_args(mrb, "i", &c);
-//   M5.Lcd.fillScreen(c);
+  m5lcd_fill_screen((uint16_t)c);
   return self;
 }
 
 static mrb_value
 mrb_lcd_clear(mrb_state *mrb, mrb_value self)
 {
-//   M5.Lcd.fillScreen(0);
-//   M5.Lcd.setCursor(0, 0);
+  m5lcd_clear();
   return self;
 }
 
@@ -80,6 +80,7 @@ mrb_lcd_circle(mrb_state *mrb, mrb_value self)
   mrb_int x, y, r, c;
   mrb_get_args(mrb, "iiii", &x, &y, &r, &c);
 //   M5.Lcd.drawCircle(x, y, r, c);
+  m5lcd_circle(x, y, r, (uint16_t)c);
   return self;
 }
 
@@ -90,6 +91,7 @@ mrb_lcd_fill_circle(mrb_state *mrb, mrb_value self)
   mrb_int x, y, r, c;
   mrb_get_args(mrb, "iiii", &x, &y, &r, &c);
 //   M5.Lcd.fillCircle(x, y, r, c);
+  m5lcd_fill_circle(x, y, r, (uint16_t)c);
   return self;
 }
 
@@ -100,6 +102,7 @@ mrb_lcd_triangle(mrb_state *mrb, mrb_value self)
   mrb_int x1, y1, x2, y2, x3, y3, c;
   mrb_get_args(mrb, "iiiiiii", &x1, &y1, &x2, &y2, &x3, &y3, &c);
 //   M5.Lcd.drawTriangle(x1, y1, x2, y2, x3, y3, c);
+  m5lcd_draw_triangle(x1, y1, x2, y2, x3, y3, (uint16_t)c);
   return self;
 }
 
@@ -110,6 +113,7 @@ mrb_lcd_fill_triangle(mrb_state *mrb, mrb_value self)
   mrb_int x1, y1, x2, y2, x3, y3, c;
   mrb_get_args(mrb, "iiiiiii", &x1, &y1, &x2, &y2, &x3, &y3, &c);
 //   M5.Lcd.fillTriangle(x1, y1, x2, y2, x3, y3, c);
+  m5lcd_fill_triangle(x1, y1, x2, y2, x3, y3, (uint16_t)c);
   return self;
 }
 
@@ -120,6 +124,7 @@ mrb_lcd_round_rect(mrb_state *mrb, mrb_value self)
   mrb_int x, y, w, h, r, c;
   mrb_get_args(mrb, "iiiiii", &x, &y, &w, &h, &r, &c);
 //   M5.Lcd.drawRoundRect(x, y, w, h, r, c);
+  m5lcd_draw_round_rect(x, y, w, h, r, (uint16_t)c);
   return self;
 }
 
@@ -130,6 +135,7 @@ mrb_lcd_fill_round_rect(mrb_state *mrb, mrb_value self)
   mrb_int x, y, w, h, r, c;
   mrb_get_args(mrb, "iiiiii", &x, &y, &w, &h, &r, &c);
 //   M5.Lcd.fillRoundRect(x, y, w, h, r, c);
+  m5lcd_fill_round_rect(x, y, w, h, r, (uint16_t)c);
   return self;
 }
 
@@ -144,13 +150,14 @@ mrb_lcd_draw_bitmap(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// M5.Lcd.drawChar(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
+// M5.Lcd.drawChar(int16_t x, int16_t y, char c, uint16_t color, uint16_t bg, uint8_t size);
 static mrb_value
 mrb_lcd_draw_char(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, chr, fc, bc, sz;
   mrb_get_args(mrb, "iiiiii", &x, &y, &chr, &fc, &bc, &sz);
 //   M5.Lcd.drawChar(x, y, chr, fc, bc, sz);
+  m5lcd_draw_char(x, y, chr, (uint16_t)fc, (uint16_t)bc, (uint8_t)sz);
   return self;
 }
 
@@ -162,6 +169,7 @@ mrb_lcd_set_cursor(mrb_state *mrb, mrb_value self)
   mrb_int x, y;
   mrb_get_args(mrb, "ii", &x, &y);
 //   M5.Lcd.setCursor(x, y);
+  m5lcd_set_cursor(x, y);
   return mrb_nil_value();
 }
 
@@ -181,6 +189,7 @@ mrb_lcd_set_text_size(mrb_state *mrb, mrb_value self)
   mrb_int s;
   mrb_get_args(mrb, "i", &s);
 //   M5.Lcd.setTextSize((uint8_t)s);
+  m5lcd_set_text_size((uint8_t)s);
   return mrb_nil_value();
 }
 
@@ -190,6 +199,7 @@ mrb_lcd_set_text_wrap(mrb_state *mrb, mrb_value self)
   mrb_bool wx, wy;
   mrb_get_args(mrb, "bb", &wx, &wy);
 //   M5.Lcd.setTextWrap(wx, wy);
+  m5lcd_set_text_wrap((uint8_t)wx, (uint8_t)wy);
   return self;
 }
 
@@ -199,6 +209,7 @@ mrb_lcd_set_text_color(mrb_state *mrb, mrb_value self)
   mrb_int fc;
   mrb_get_args(mrb, "i", &fc);
 //   M5.Lcd.setTextColor((uint16_t)fc);
+  m5lcd_set_text_color((uint16_t)fc);
   return mrb_nil_value();
 }
 

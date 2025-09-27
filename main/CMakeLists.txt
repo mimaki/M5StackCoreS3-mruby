@@ -11,6 +11,7 @@ idf_component_register(
         driver
         bt
         M5Unified
+        M5GFX
         M5CUtil
         mruby_component
 )
