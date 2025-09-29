@@ -62,27 +62,61 @@ static bool SDInit(void)
   return true;
 }
 
-// static char buff[256] = {0};
-// const char *FNAME = MOUNT_POINT"/test.txt";
-// static char *RWFile(void)
-// {
-//   FILE *fp = fopen(FNAME, "w");
-//   if (!fp) {
-//     m5printf("Failed to open file for writing: %s\n", FNAME);
-//     return NULL;
-//   }
-//   fprintf(fp, "Hello, M5stack CoreS3\n");
-//   fclose(fp);
+#define SD_FILE_TEST  // SDカードのファイル読み書きテスト実施
+
+#ifdef SD_FILE_TEST
+static char buff[256] = {0};
+const char *FNAME = MOUNT_POINT"/test.txt";
+static char *RWFile(void)
+{
+  FILE *fp = fopen(FNAME, "w");
+  if (!fp) {
+    m5printf("Failed to open file for writing: %s\n", FNAME);
+    return NULL;
+  }
+  fprintf(fp, "Hello, M5stack CoreS3\n");
+  fclose(fp);
     
-//   fp = fopen(FNAME, "r");
-//   if (!fp) {
-//     m5printf("Failed to open file for reading: %s\n", FNAME);
-//     return NULL;
-//   }
-//   fgets(buff, sizeof(buff), fp);
-//   fclose(fp);
-//   return buff;
-// }
+  fp = fopen(FNAME, "r");
+  if (!fp) {
+    m5printf("Failed to open file for reading: %s\n", FNAME);
+    return NULL;
+  }
+  fgets(buff, sizeof(buff), fp);
+  fclose(fp);
+  return buff;
+}
+static bool RWBinFile(void)
+{
+  const char *fname = MOUNT_POINT"/test.bin";
+  bool result = true;
+  FILE *fp = fopen(fname, "wb");
+  if (!fp) {
+    m5printf("Failed to open file for writing: %s\n", fname);
+    return false;
+  }
+  uint8_t wdata[16];
+  for (int i=0; i<sizeof(wdata); i++) wdata[i] = i;
+  fwrite(wdata, 1, sizeof(wdata), fp);
+  fclose(fp);
+    
+  fp = fopen(fname, "rb");
+  if (!fp) {
+    m5printf("Failed to open file for reading: %s\n", fname);
+    return false;
+  }
+  uint8_t rdata[16];
+  fread(rdata, 1, sizeof(rdata), fp);
+  fclose(fp);
+  m5printf("Read binary data:");
+  for (int i=0; i<sizeof(rdata); i++) {
+    m5printf(" %02x", rdata[i]);
+    if (rdata[i] != i) result = false;
+  }
+  m5printf("\n");
+  return result;
+}
+#endif  // SD_FILE_TEST
 
 static mrb_value
 run_mrb_app(mrb_state *mrb, const char *fname)
@@ -144,14 +178,22 @@ void mrubyTask(void *pvParameters)
   mrb_state *mrb = mrb_open();
   m5printf("%s\n", mrb ? "done" : "failed");
 
-  // // SDカードアクセス確認
-  // char *file_content = RWFile();
-  // if (file_content) {
-  //   m5printf("SD card file content: %s\n", file_content);
-  // }
-  // else {
-  //   m5printf("Failed to read/write SD card file.\n");
-  // }
+#ifdef SD_FILE_TEST
+  // SDカードアクセス確認
+  char *file_content = RWFile();
+  if (file_content) {
+    m5printf("SD card file content: %s\n", file_content);
+  }
+  else {
+    m5printf("Failed to read/write SD card file.\n");
+  }
+  if (RWBinFile()) {
+    m5printf("SD card binary file read/write done.\n");
+  }
+  else {
+    m5printf("Failed to read/write SD card binary file.\n");
+  }
+#endif  // SD_FILE_TEST
 
   // // mrubyスクリプト実行
   // mrb_value v = mrb_load_string(mrb, "1+2+3+4+5+6+7+8+9+10");
