@@ -11,6 +11,7 @@
 // #include "driver/uart_vfs.h"
 #include "driver/uart.h"
 #include "M5CUtil.h"
+#include "usbserial.h"
 
 #define MRB_NO_BOXING   // Should match mruby VM's configuration.
 #include <mruby.h>
@@ -702,6 +703,42 @@ mirb(mrb_state *mrb)
       if (check_keyword(last_code_line, "quit") || check_keyword(last_code_line, "exit")) {
         break;
       }
+
+#if 1 // "serialtest" を入力するとUSBシリアルテストを実行
+      if (check_keyword(last_code_line, "serialtest")) {
+        m5printf("Start serial test...\n");
+
+        // USBシリアル初期化(バイト転送モード)
+        usb_serial_init();
+
+        // 1文字受信して、文字コードを1加算して送り返す
+        // 10文字繰り返す
+        m5printf("Entry 10 characters: \n");
+        for (int i=0; i<10; i++) {
+          // 1バイト受信
+          int16_t c = -1;
+          while ((c = usb_serial_receive_byte()) < 0) {
+            vTaskDelay(10);
+          }
+          // 1バイト送信
+          usb_serial_send_byte((uint8_t)(c + 1));
+          M5.Lcd.printf("%02x ", c);
+          M5.update();
+        }
+
+        // 10秒後にソフトリセット
+        uint8_t msg1[] = "\nWait 10 seconds to restart...\n10 ";
+        usb_serial_send_bytes(msg1, sizeof(msg1)-1);
+        uint8_t msg2[] = "9 ";
+        for (int i=0; i<10; i++) {
+          vTaskDelay(1000 / portTICK_PERIOD_MS);
+          msg2[0] = (uint8_t)('9' - i);
+          usb_serial_send_bytes(msg2, sizeof(msg2)-1);
+        }
+        esp_restart();
+      }
+#endif
+
       strcpy(ruby_code, last_code_line);
     }
 
