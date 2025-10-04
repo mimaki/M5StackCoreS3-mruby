@@ -99,4 +99,11 @@ MRuby::CrossBuild.new('esp32') do |conf|
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-ble-gatt"
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-lcd"
 
+  conf.gem :core => "../../../../mrbgems/mruby-i2c-device"
+  conf.gem :core => "../../../../mrbgems/mruby-grove-color-sensor"
+  conf.gem :core => "../../../../mrbgems/mruby-grove-temp-humi-sensor"
+  conf.gem :core => "../../../../mrbgems/mruby-grove-water-level-sensor"
+  conf.gem :core => "../../../../mrbgems/mruby-laser-ranging-sensor"
+  conf.gem :core => "../../../../mrbgems/mruby-haext-accel"
+
 end
