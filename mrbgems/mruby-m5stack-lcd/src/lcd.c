@@ -6,6 +6,11 @@
 #include <string.h>
 #include <M5CUtil.h>
 
+#define CHAR_WIDTH  6
+#define CHAR_HEIGHT 8
+
+static uint8_t text_size = 1;
+
 // M5.lcd.setBrightness(uint8_t brightness);
 static mrb_value
 mrb_lcd_set_brightness(mrb_state *mrb, mrb_value self)
@@ -169,7 +174,7 @@ mrb_lcd_set_cursor(mrb_state *mrb, mrb_value self)
   mrb_int x, y;
   mrb_get_args(mrb, "ii", &x, &y);
 //   M5.Lcd.setCursor(x, y);
-  m5lcd_set_cursor(x, y);
+  m5lcd_set_cursor(x * CHAR_WIDTH * text_size, y * CHAR_HEIGHT * text_size);
   return mrb_nil_value();
 }
 
@@ -189,7 +194,8 @@ mrb_lcd_set_text_size(mrb_state *mrb, mrb_value self)
   mrb_int s;
   mrb_get_args(mrb, "i", &s);
 //   M5.Lcd.setTextSize((uint8_t)s);
-  m5lcd_set_text_size((uint8_t)s);
+  text_size = (uint8_t)s;
+  m5lcd_set_text_size(text_size);
   return mrb_nil_value();
 }
 

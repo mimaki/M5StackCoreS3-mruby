@@ -100,9 +100,9 @@ class LCD
     @x, @y = x, y
     @fc = c if c
     if fill
-      LCD.fill_circle(@x, @y, @fc)
+      LCD.fill_circle(@x, @y, r, @fc)
     else
-      LCD.circle(@x, @y, @fc)
+      LCD.circle(@x, @y, r, @fc)
     end
     self
   end
