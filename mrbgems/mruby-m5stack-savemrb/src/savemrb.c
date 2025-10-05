@@ -34,7 +34,7 @@ static mrb_value savemrb(mrb_state *mrb, mrb_value self)
   FILE* save_fp = fopen(savepath, "wb");
   if (!save_fp) {
     m5printf("File open error.\n");
-    // return mrb_false_value();
+    return mrb_false_value();
   }
 
   //

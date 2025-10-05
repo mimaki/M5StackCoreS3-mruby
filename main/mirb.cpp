@@ -704,7 +704,7 @@ mirb(mrb_state *mrb)
         break;
       }
 
-#if 1 // "serialtest" を入力するとUSBシリアルテストを実行
+#if 0 // "serialtest" を入力するとUSBシリアルテストを実行
       if (check_keyword(last_code_line, "serialtest")) {
         m5printf("Start serial test...\n");
 
