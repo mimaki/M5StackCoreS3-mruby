@@ -1,3 +1,3 @@
-# GroveWaterLevelSensor
+# Laser ranging sensor
 
-Handle Grove I2C Water Level Sensor.
+Handle I2C Laser ranging sensor.
