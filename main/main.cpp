@@ -233,6 +233,9 @@ void app_main(void)
 //   }
 // #endif
 
+  // LCD初期化
+  m5lcd_init();
+
   // BLE GATTサーバー起動
   extern void gatt_app_main(void);
   gatt_app_main();
