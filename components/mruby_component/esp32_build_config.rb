@@ -105,5 +105,7 @@ MRuby::CrossBuild.new('esp32') do |conf|
   conf.gem :core => "../../../../mrbgems/mruby-grove-water-level-sensor"
   conf.gem :core => "../../../../mrbgems/mruby-laser-ranging-sensor"
   conf.gem :core => "../../../../mrbgems/mruby-haext-accel"
+  
+  conf.gem :core => "../../../../mrbgems/mruby-m5stack-savemrb"
 
 end

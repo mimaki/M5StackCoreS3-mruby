@@ -3,6 +3,7 @@ idf_component_register(
         "main.cpp"
         "mirb.cpp"
         "gatt.c"
+        "usbserial.cpp"
     INCLUDE_DIRS
         "."
     REQUIRES
