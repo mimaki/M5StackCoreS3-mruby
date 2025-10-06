@@ -4,7 +4,7 @@
 #include "mruby/string.h"
 #include "mruby/array.h"
 #include "mruby/data.h"
-#include "../../main/usbserial.h"
+// #include "../../../main/usbserial.h"
 #include "M5CUtil.h"
 #include "stdbool.h"
 #include <stdio.h>
