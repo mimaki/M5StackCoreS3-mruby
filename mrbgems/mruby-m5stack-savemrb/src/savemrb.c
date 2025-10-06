@@ -9,6 +9,7 @@
 #include "stdbool.h"
 #include <stdio.h>
 #include <sys/stat.h>  // mkdir
+#include "esp_system.h" // esp_restart
 
 
 #ifndef MOUNT_POINT
@@ -130,6 +131,9 @@ err_exit:
 
   // UART
   m5printf("XMODEM: end.\n");
+
+  // Software reset
+  esp_restart();
 
   return result ? mrb_true_value() : mrb_false_value();  
 }
