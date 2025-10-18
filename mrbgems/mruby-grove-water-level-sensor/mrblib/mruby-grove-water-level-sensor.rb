@@ -20,7 +20,7 @@ class GroveWaterLevelSensor < I2CDevice
       touch_hi = []
       lo.each_char {|c| touch_lo.push( c.ord ) }
       hi.each_char {|c| touch_hi.push( c.ord ) }
-      touch_hi = [0,0,0,0,0,0,0,0,0,0]
+      touch_hi = [0,0,0,0,0,0,0,0,0,0,0,0]
     else
       touch_lo = [255,255,255,255,255,255,255,255]
       touch_hi = [255,255,0,0,0,0,0,0,0,0]
