@@ -24,7 +24,11 @@ extern "C" {
 extern int mirb(mrb_state *mrb);
 
 #define MOUNT_POINT "/sdcard"
-#define APP_MRB MOUNT_POINT"/autorun.mrb"
+#define MRB_DIR MOUNT_POINT"/M5MRB/"
+#define MRB_EXT ".mrb"
+#define ONESHOT_INI MOUNT_POINT"/oneshot.ini"
+#define APP_MRB MOUNT_POINT"/autorun"MRB_EXT
+#define BTDEV_INI MOUNT_POINT"/btdev.ini"
 
 static sdmmc_card_t *card;
 
@@ -132,9 +136,9 @@ void mrubyTask(void *pvParameters)
   // GPIO初期化
   m5gpio_init();
 
-  // SDカード初期化
-  SDInit();
-  m5printf("SD card initialed.\n");
+  // // SDカード初期化
+  // SDInit();
+  // m5printf("SD card initialed.\n");
 
   // // SDカード内のファイル一覧表示
   // list_mrb_files(MOUNT_POINT);
@@ -194,6 +198,44 @@ void mrubyTask(void *pvParameters)
   M5.update();
 }
 
+// 文字列の末尾の改行コードを削除
+static void rtrim(char *str)
+{
+  char *pos = &str[strlen(str) - 1];
+  while (pos >= str) {
+    if (*pos == '\n' || *pos == '\r') {
+      *pos = '\0';
+      pos--;
+    }
+    else {
+      break;
+    }
+  }
+}
+
+// BLE初期化
+void BLE_init(void)
+{
+  // BLEデバイス名取得
+  FILE *fpbt = fopen(BTDEV_INI, "r");
+  if (fpbt) {
+    char line[64];
+    fgets(line, sizeof(line), fpbt);
+    fclose(fpbt);
+    // 改行コード削除
+    rtrim(line);
+
+    if (strlen(line) > 0) {
+      extern void SetBLEDeviceName(const char *name);
+      // BLEデバイス名設定
+      SetBLEDeviceName(line);
+    }
+  }
+
+  // BLE GATTサーバー起動
+  extern void gatt_app_main(void);
+  gatt_app_main();
+}
 
 void app_main(void)
 {
@@ -236,9 +278,33 @@ void app_main(void)
   // LCD初期化
   m5lcd_init();
 
-  // BLE GATTサーバー起動
-  extern void gatt_app_main(void);
-  gatt_app_main();
+  // SDカード初期化
+  SDInit();
+  m5printf("SD card initialed.\n");
+
+  // // BLEデバイス名取得
+  // FILE *fpbt = fopen("/sdcard/btdev.ini", "r");
+  // if (fpbt) {
+  //   char line[128];
+  //   fgets(line, sizeof(line), fpbt);
+  //   fclose(fpbt);
+  //   // 改行コード削除
+  //   for (char *pos = &line[strlen(line) - 1]; pos >= line; pos--) {
+  //     if (*pos == '\n' || *pos == '\r') *pos = '\0';
+  //     else break;
+  //   }
+  //   if (strlen(line) > 0) {
+  //     extern void SetBLEDeviceName(const char *name);
+  //     SetBLEDeviceName(line);
+  //   }
+  // }
+
+  // // BLE GATTサーバー起動
+  // extern void gatt_app_main(void);
+  // gatt_app_main();
+
+  // BLE初期化
+  BLE_init();
 
   // mrubyタスク起動
   xTaskCreate(mrubyTask, "mrubyTask", 16384, NULL, 5, NULL);

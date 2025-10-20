@@ -62,8 +62,10 @@ static void gatts_profile_b_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 
 #define BT_DEVICE_ID                "01"
 #define BT_DEVICE_NAME_PREFIX       "M5S3mrb"
-#define BT_DEVICE_NAME_FORMAT       BT_DEVICE_NAME_PREFIX "%02d"
-static char sDeviceName[] = BT_DEVICE_NAME_PREFIX BT_DEVICE_ID;
+// #define BT_DEVICE_NAME_FORMAT       BT_DEVICE_NAME_PREFIX "%02d"
+#define BT_DEF_DEVICE_NAME          BT_DEVICE_NAME_PREFIX BT_DEVICE_ID
+// Bluetoothデバイス名
+static char sDeviceName[ESP_BLE_ADV_NAME_LEN_MAX + 1] = BT_DEF_DEVICE_NAME;
 
 static uint8_t char1_str[] = {0x11,0x22,0x33};
 
@@ -346,6 +348,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         gl_profile_tab[PROFILE_A_APP_ID].service_id.id.uuid.len = ESP_UUID_LEN_16;
         gl_profile_tab[PROFILE_A_APP_ID].service_id.id.uuid.uuid.uuid16 = GATTS_SERVICE_UUID_TEST_A;
 
+        ESP_LOGI(GATTS_TAG, "GATT server register, Device Name = %s", sDeviceName);
         esp_err_t set_dev_name_ret = esp_ble_gap_set_device_name(sDeviceName);
         if (set_dev_name_ret){
             ESP_LOGE(GATTS_TAG, "set device name failed, error code = %x", set_dev_name_ret);
@@ -870,4 +873,21 @@ uint8_t IsBLEConnected(uint16_t id)
     uint8_t isConn = gl_profile_tab[id].conn_id != CONN_ID_NONE;
     // ESP_LOGI(GATTS_TAG, "IsBLEConnected: %d", isConn);
     return isConn;
+}
+
+// SetBLEDeviceName
+// Set BLE device name
+// params
+//  name: Device name string
+// return
+//  none
+void SetBLEDeviceName(const char *name)
+{
+    size_t len = strlen(name);
+    if (len > ESP_BLE_ADV_NAME_LEN_MAX) {
+        len = ESP_BLE_ADV_NAME_LEN_MAX;
+    }
+    memcpy(sDeviceName, name, len);
+    sDeviceName[len] = '\0';
+    ESP_LOGI(GATTS_TAG, "SetBLEDeviceName: %s", sDeviceName);
 }
