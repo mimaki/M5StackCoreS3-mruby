@@ -23,6 +23,14 @@ class BLE
     notify "WL,#{wl}"
   end
 
+  def send_distance(dist)
+    notify "DI,#{dist}"
+  end
+
+  def send_accel(x, y, z)
+    notify "AC,#{x},#{y},#{z}"
+  end
+
   def send(val)
     val = val.to_s unless val.class == String
     notify val
