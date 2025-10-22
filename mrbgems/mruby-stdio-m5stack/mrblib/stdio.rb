@@ -1,3 +1,3 @@
-class STDIN
-  @@rs = "\r"
-end
+# class STDIN
+#   @@rs = "\n"
+# end

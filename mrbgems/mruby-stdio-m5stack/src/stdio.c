@@ -28,7 +28,8 @@ mrb_stderr_putc(mrb_state *mrb, mrb_value self)
 static mrb_value
 mrb_stdin_getc(mrb_state *mrb, mrb_value self)
 {
-  mrb_int c = fgetc(stdin);  
+  // mrb_int c = fgetc(stdin);
+  mrb_int c = m5getc(stdin);
   return mrb_fixnum_value(c);
 }
 

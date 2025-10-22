@@ -107,5 +107,6 @@ MRuby::CrossBuild.new('esp32') do |conf|
   conf.gem :core => "../../../../mrbgems/mruby-haext-accel"
   
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-savemrb"
+  conf.gem :core => "../../../../mrbgems/mruby-m5stack-mrb"
 
 end

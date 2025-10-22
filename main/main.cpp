@@ -32,6 +32,22 @@ extern int mirb(mrb_state *mrb);
 
 static sdmmc_card_t *card;
 
+// 文字列の末尾の改行コードを削除
+static void rtrim(char *str)
+{
+  char *pos = &str[strlen(str) - 1];
+  while (pos >= str) {
+    if (*pos == '\n' || *pos == '\r') {
+      *pos = '\0';
+      pos--;
+    }
+    else {
+      break;
+    }
+  }
+}
+
+
 static bool SDInit(void)
 {
   esp_err_t ret;
@@ -112,12 +128,41 @@ run_mrb_app(mrb_state *mrb, const char *fname)
 //   }
 //   struct dirent *entry;
 //   while ((entry = readdir(dir)) != NULL) {
-//     if (entry->d_type == DT_REG && strstr(entry->d_name, ".mrb")) {
+//     if (entry->d_type == DT_REG && strstr(entry->d_name, ".MRB")) {
 //       m5printf("Found mrb file: %s/%s\n", path, entry->d_name);
 //     }
 //   }
 //   closedir(dir);
 // }
+
+static char app_path[PATH_MAX] = {0};
+static void get_mrb_app_path(void)
+{
+  // // test
+  // dir_entry *dir_list = list_mrb_files(MRB_DIR);
+  // for (dir_entry *dir=dir_list; dir != NULL; dir=dir->next) {
+  //   m5printf("dir_entry: %s\n", dir->name);
+  // }
+  // free_dir_list(dir_list);
+
+  FILE *fp = fopen(ONESHOT_INI, "r");
+  if (fp) {
+    fgets(app_path, sizeof(app_path), fp);
+    // 改行コード削除
+    rtrim(app_path);
+    fclose(fp);
+
+    // oneshot.iniを削除
+    remove(ONESHOT_INI);
+  }
+
+  if (strlen(app_path) == 0) {
+    // ONESHOT_INIファイルが無い場合はデフォルトのautorun.mrbを使用
+    strcpy(app_path, APP_MRB);
+  }
+  m5printf("Run %s\n", app_path);
+  m5delay(500);
+}
 
 // void app_main(void)
 void mrubyTask(void *pvParameters)
@@ -166,8 +211,11 @@ void mrubyTask(void *pvParameters)
   // M5.Lcd.print("Hello, CoreS3!");
   
   if (mrb) {
+    // 実行するmrbファイルのパスを取得
+    get_mrb_app_path();
     // SDカード内のautorun.mrbを実行
-    mrb_value val = run_mrb_app(mrb, APP_MRB);
+    // mrb_value val = run_mrb_app(mrb, APP_MRB);
+    mrb_value val = run_mrb_app(mrb, app_path);
     if (mrb->exc) {
       val = mrb_funcall(mrb, mrb_obj_value(mrb->exc), "inspect", 0);
       m5printf("Exception: %s\n", mrb_str_to_cstr(mrb, mrb_obj_as_string(mrb, val)));
@@ -196,21 +244,6 @@ void mrubyTask(void *pvParameters)
   mrb_close(mrb);
   printf("mruby VM closed\n");
   M5.update();
-}
-
-// 文字列の末尾の改行コードを削除
-static void rtrim(char *str)
-{
-  char *pos = &str[strlen(str) - 1];
-  while (pos >= str) {
-    if (*pos == '\n' || *pos == '\r') {
-      *pos = '\0';
-      pos--;
-    }
-    else {
-      break;
-    }
-  }
 }
 
 // BLE初期化
