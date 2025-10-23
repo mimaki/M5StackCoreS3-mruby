@@ -50,7 +50,8 @@ class MRB
         @@fontsize ^= 3 # 1<=>2
         @@colmax = COLMAX / @@fontsize
         @@rowmax = ROWMAX / @@fontsize
-        puts "fontsize=#{@@fontsize}"
+        LCD.text_size = @@fontsize
+        # puts "fontsize=#{@@fontsize}"
       when "Q"  # quit
         break
       when "?"  # help
@@ -92,5 +93,19 @@ EOS
         end
       end
     }
+  end
+end
+
+module Kernel
+  def mrbmenu
+    MRB.menu
+  end
+
+  def mrblist
+    MRB.list.sort
+  end
+
+  def runmrb(mrb)
+    MRB.run(mrb)
   end
 end
