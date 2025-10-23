@@ -48,7 +48,7 @@ mrb_i2c_init(mrb_state *mrb, mrb_value self)
 
   mrb_get_args(mrb, "|io", &id, &params);
 
-m5printf("I2C#new(%d)\n", (int)id);
+  // m5printf("I2C#new(%d)\n", (int)id);
 
   // i2c = (mrb_esp32_i2c*)mrb_malloc(mrb, sizeof(mrb_esp32_i2c));
   /* initialize I2C object */
@@ -77,7 +77,7 @@ mrb_i2c_read(mrb_state *mrb, mrb_value self)
 // #endif
 
   mrb_get_args(mrb, "ii|A", &addr, &len, &params);
-m5printf("I2C#read(addr=0x%02x, len=%d, params)\n", (int)addr, (int)len);
+  // m5printf("I2C#read(addr=0x%02x, len=%d, params)\n", (int)addr, (int)len);
 
 #if 1
 #ifndef NO_DEVICE
@@ -93,7 +93,7 @@ m5printf("I2C#read(addr=0x%02x, len=%d, params)\n", (int)addr, (int)len);
 if (arylen > 0) m5printf("  param:");
       for (i=0; i<arylen; i++) {
         buf[i] = (uint8_t)mrb_fixnum(mrb_ary_ref(mrb, params, i));
-m5printf(" %02x ", buf[i]);
+        // m5printf(" %02x ", buf[i]);
       }
 if (arylen > 0) m5printf("\n");
       m5i2c_write((uint8_t)addr, buf, arylen, 0);
@@ -117,13 +117,13 @@ if (arylen > 0) m5printf("\n");
   }
 #endif
   v = mrb_str_new(mrb, (const char*)buf, len);
-if (len > 0) {
-  m5printf("  read:");
-  for (i=0; i<len; i++) {
-    m5printf("%02x ", buf[i]);
-  }
-  m5printf("\n");
-}
+  // if (len > 0) {
+  //   m5printf("  read:");
+  //   for (i=0; i<len; i++) {
+  //     m5printf("%02x ", buf[i]);
+  //   }
+  //   m5printf("\n");
+  // }
   mrb_free(mrb, buf);
 
 #else
@@ -169,9 +169,7 @@ if (len > 0) {
 }
   mrb_free(mrb, buf);
 
-
 #endif
-
 
   return v;
 }
@@ -193,16 +191,16 @@ mrb_i2c_write(mrb_state *mrb, mrb_value self)
 // // #endif
 
   mrb_get_args(mrb, "io|b", &addr, &data, &stop);
-m5printf("I2C#write(addr=0x%02x, data, stop=%d)\n", (int)addr, stop ? 1 : 0);
+  // m5printf("I2C#write(addr=0x%02x, data, stop=%d)\n", (int)addr, stop ? 1 : 0);
 
   if (mrb_string_p(data)) {
-m5printf("  write string data\n");
+    // m5printf("  write string data\n");
     len = RSTRING_LEN(data);
     buf = (uint8_t*)mrb_malloc(mrb, len);
     memcpy(buf, RSTRING_PTR(data), len);
   }
   else if (mrb_array_p(data)) {
-m5printf("  write array data\n");
+    // m5printf("  write array data\n");
     len = RARRAY_LEN(data);
     buf = (uint8_t*)mrb_malloc(mrb, len);
     for (i=0; i<len; i++) {
@@ -210,26 +208,26 @@ m5printf("  write array data\n");
     }
   }
   else if (mrb_fixnum_p(data)) {
-m5printf("  write integer data\n");
+    // m5printf("  write integer data\n");
     len = 1;
     buf = (uint8_t*)mrb_malloc(mrb, len);
     buf[0] = (uint8_t)mrb_fixnum(data);
   }
   else {
-m5printf("  write object data\n");
+    // m5printf("  write object data\n");
     v = mrb_obj_as_string(mrb, data);
     len = RSTRING_LEN(v);
     buf = (uint8_t*)mrb_malloc(mrb, len);
     memcpy(buf, RSTRING_PTR(v), len);
   }
 
-if (len > 0) {
-  m5printf("  write:");
-  for (i=0; i<len; i++) {
-    m5printf("%02x ", buf[i]);
-  }
-  m5printf("\n");
-}
+// if (len > 0) {
+//   m5printf("  write:");
+//   for (i=0; i<len; i++) {
+//     m5printf("%02x ", buf[i]);
+//   }
+//   m5printf("\n");
+// }
 
 #ifndef NO_DEVICE
 //   WIRE(i2c)->beginTransmission((int)addr);
