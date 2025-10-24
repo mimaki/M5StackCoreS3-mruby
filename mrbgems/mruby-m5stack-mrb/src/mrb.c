@@ -36,7 +36,10 @@ mrb_mrb_list(mrb_state *mrb, mrb_value self)
 
   // Get file list in `/M5MRB`
   dir_entry *topmrb = list_mrb_files(MRB_DIR);
-  for (dir_entry *app=topmrb; app->next; app=app->next) {
+  if (!topmrb) {
+    return ary; // no files
+  }
+  for (dir_entry *app=topmrb; app; app=app->next) {
     char *name = app->name;
     // m5printf("app->name: %s\n", name);
     if (strlen(name) <= 4) continue;
