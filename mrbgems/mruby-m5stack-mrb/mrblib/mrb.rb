@@ -68,8 +68,10 @@ Commands
 EOS
       else      # appno->mrbidx
         mrbidx = cmd.to_i
-        mrbidx = 0 if @@mrbs.size <= mrbidx
-        if mrbidx > 0 # number
+        # mrbidx = 0 if @@mrbs.size < mrbidx
+        if mrbidx > @@mrbs.size
+          puts "Number #{mrbidx} is out of range."
+        elsif mrbidx > 0 # number
           mrbidx = mrbidx + page * @@colmax * @@rowmax - 1
           # puts "mrbidx = #{mrbidx}"
           mrb = @@mrbs[mrbidx]
