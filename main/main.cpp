@@ -181,6 +181,20 @@ void mrubyTask(void *pvParameters)
   // GPIO初期化
   m5gpio_init();
 
+  // // Sound初期化
+  // m5sound_init();
+
+  printf("m5gpio_init done.\n");
+  M5.update();
+  m5sound_play_tone(440, 1000); // 440Hzを1.0秒鳴らす
+  m5delay(100);
+  for (int v=0; v<=255; v+=15) {
+    m5sound_set_volume(v);
+    m5printf("Set volume: %d\n", v);
+    m5sound_play_tone(440, 400); // 440Hzを0.4秒鳴らす
+    m5delay(100);
+  }
+
   // // SDカード初期化
   // SDInit();
   // m5printf("SD card initialed.\n");
@@ -275,7 +289,35 @@ void app_main(void)
   // M5初期化
   auto cfg = M5.config();
   M5.begin(cfg);
-  
+
+// { // test sound
+//   M5.begin();
+//   M5.Speaker.begin();
+//   M5.Speaker.setVolume(64);    // 中間値
+//   printf("Speaker Ready\n");
+//   M5.update();
+//   M5.Speaker.tone(2000, 500);   // 500ms
+//   M5.delay(600);                // 鳴動時間より少し長く
+//   printf("Speaker Stopped\n");
+//   M5.update();
+//   M5.Speaker.stop();
+// }
+
+  // Sound初期化
+#if 0
+  m5sound_init();
+  m5sound_play_tone(440, 1000); // 440Hzを1.0秒鳴らす
+  M5.delay(100);
+  for (int v=0; v<=255; v+=15) {
+    m5sound_set_volume(v);
+    // printf("Set volume: %d\n", v);
+    // M5.update();
+    m5sound_play_tone(440, 400); // 440Hzを0.4秒鳴らす
+    M5.delay(100);
+  }
+  m5sound_term();
+#endif
+
 // #if 0 // test
 //   M5.Display.setTextSize(2);
 //   M5.Display.setCursor(0, 0);
@@ -311,9 +353,44 @@ void app_main(void)
   // LCD初期化
   m5lcd_init();
 
+#if 0
+  m5sound_init();
+  printf("m5lcd_init done.\n");
+  M5.update();
+  m5sound_play_tone(440, 1000); // 440Hzを1.0秒鳴らす
+  M5.delay(100);
+  for (int v=0; v<=255; v+=15) {
+    m5sound_set_volume(v);
+    printf("Set volume: %d\n", v);
+    M5.update();
+    m5sound_play_tone(440, 400); // 440Hzを0.4秒鳴らす
+    M5.delay(100);
+  }
+  m5sound_term();
+  m5lcd_init();
+#endif
+
   // SDカード初期化
   SDInit();
   m5printf("SD card initialed.\n");
+
+#if 0
+  m5sound_init();
+  printf("SDInit done.\n");
+  M5.update();
+  m5sound_play_tone(440, 1000); // 440Hzを1.0秒鳴らす
+  M5.delay(100);
+  for (int v=0; v<=255; v+=15) {
+    m5sound_set_volume(v);
+    printf("Set volume: %d\n", v);
+    M5.update();
+    m5sound_play_tone(440, 400); // 440Hzを0.4秒鳴らす
+    M5.delay(100);
+  }
+  m5sound_term();
+  m5lcd_init();
+#endif
+
 
   // // BLEデバイス名取得
   // FILE *fpbt = fopen("/sdcard/btdev.ini", "r");
@@ -338,6 +415,24 @@ void app_main(void)
 
   // BLE初期化
   BLE_init();
+
+#if 0
+  m5sound_init();
+  printf("BLE_init done.\n");
+  M5.update();
+  m5sound_play_tone(440, 1000); // 440Hzを1.0秒鳴らす
+  M5.delay(100);
+  for (int v=0; v<=255; v+=15) {
+    m5sound_set_volume(v);
+    printf("Set volume: %d\n", v);
+    M5.update();
+    m5sound_play_tone(440, 400); // 440Hzを0.4秒鳴らす
+    M5.delay(100);
+  }
+  m5sound_term();
+  // LCD初期化
+  m5lcd_init();
+#endif
 
   // mrubyタスク起動
   xTaskCreate(mrubyTask, "mrubyTask", 16384, NULL, 5, NULL);
