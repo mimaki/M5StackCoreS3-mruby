@@ -180,7 +180,36 @@ void mrubyTask(void *pvParameters)
 
   // GPIO初期化
   m5gpio_init();
+  // PWM初期化
+  m5pwm_init();
 
+// {
+  // m5pwm_write(3000);
+  // m5delay(1000);
+  // m5pwm_write(6000);
+  // m5delay(2000);
+  // m5pwm_write(8191);
+  // m5delay(3000);
+  // m5pwm_write(0);
+
+  // for (int i=0; i<8192; i+=256) {
+  //   m5pwm_write(i);
+  //   m5delay(10);
+  // }
+  // for (int i=8192; i>=0; i-=256) {
+  //   m5pwm_write(i);
+  //   m5delay(10);
+  // }
+  // m5pwm_write(0); // PWM出力停止
+
+  // m5pwm_write(500);
+  // for (int i=440; i<=880; i+=5) {
+  //   m5pwm_set_freq(i);
+  //   m5pwm_write(500);
+  //   m5delay(10);
+  // }
+  // m5pwm_write(0);
+// }
   // // SDカード初期化
   // SDInit();
   // m5printf("SD card initialed.\n");
