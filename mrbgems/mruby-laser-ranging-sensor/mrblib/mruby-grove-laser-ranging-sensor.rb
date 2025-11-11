@@ -11,15 +11,18 @@ class LaserRangingSensor < I2CDevice
   end
 
   def read_raw
+    raw = [0, 0]
     if @i2c
       @i2c.write @addr,[0x10, 0xb0]
       sleep 0.05
       @i2c.write @addr,[0x02]
       sleep 0.02
-      v = @i2c.read @addr,2
-      raw = [v[0].ord, v[1].ord]
-    else
-      raw = [0,0]
+      v = read_safe(@addr, 2)
+      if v.length == 2
+        raw = [v[0].ord, v[1].ord]
+      end
+    # else
+    #   raw = [0,0]
     end
     return raw
   end

@@ -13,17 +13,21 @@ class GroveWaterLevelSensor < I2CDevice
   end
 
   def read_raw
+    touch_lo = Array.new(8, 0)
+    touch_hi = Array.new(12, 0)
     if @i2c
-      lo = @i2c.read @addr-1,8
-      hi = @i2c.read @addr,12
-      touch_lo = []
-      touch_hi = []
-      lo.each_char {|c| touch_lo.push( c.ord ) }
-      hi.each_char {|c| touch_hi.push( c.ord ) }
-      touch_hi = [0,0,0,0,0,0,0,0,0,0,0,0]
-    else
-      touch_lo = [255,255,255,255,255,255,255,255]
-      touch_hi = [255,255,0,0,0,0,0,0,0,0]
+      lo = read_safe(@addr-1, 8)
+      hi = read_safe(@addr, 12)
+      if lo.length == 8 && hi.length == 12
+        touch_lo = []
+        touch_hi = []
+        lo.each_char {|c| touch_lo.push( c.ord ) }
+        hi.each_char {|c| touch_hi.push( c.ord ) }
+        touch_hi = [0,0,0,0,0,0,0,0,0,0,0,0]
+      end
+    # else
+    #   touch_lo = [255,255,255,255,255,255,255,255]
+    #   touch_hi = [255,255,0,0,0,0,0,0,0,0]
     end
     raw = touch_lo + touch_hi
     return raw

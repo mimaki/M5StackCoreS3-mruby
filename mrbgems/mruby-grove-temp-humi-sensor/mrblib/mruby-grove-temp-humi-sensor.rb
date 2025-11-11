@@ -14,7 +14,7 @@ class GroveTempHumiSensor < I2CDevice
     if @i2c
       @i2c.write @addr,[0x2c,0x06] # high-repeatability, clock-strech enable
       sleep 0.1 # conversion time : max 15ms
-      raw = @i2c.read @addr,6 #Temp MSB,TEMP LSB,CRC,Hum MSB,Hum LSB,CRC
+      raw = read_safe(@addr, 6) #Temp MSB,TEMP LSB,CRC,Hum MSB,Hum LSB,CRC
     else
       raw = [0x67,0x2c,0x81,0x92,0x4b,0xc2] # 
     end
@@ -23,12 +23,15 @@ class GroveTempHumiSensor < I2CDevice
 
   # read temperature,humidity
   def read
+    tc, rh = 0, 0
     raw = read_raw
     # Datasheet SHT3x-DIS : 4.13 Conversion of Signal Output
-    st = raw[0].ord*256+raw[1].ord
-    srh = raw[3].ord*256+raw[4].ord
-    tc = -45.0+175.0*(st.to_f/65535.0) # temperature : °C
-    rh = 100.0*srh.to_f/56635.0 # humidity %
+    if raw.length == 6
+      st = raw[0].ord*256+raw[1].ord
+      srh = raw[3].ord*256+raw[4].ord
+      tc = -45.0+175.0*(st.to_f/65535.0) # temperature : °C
+      rh = 100.0*srh.to_f/56635.0 # humidity %
+    end
     return [tc, rh]
   end
 

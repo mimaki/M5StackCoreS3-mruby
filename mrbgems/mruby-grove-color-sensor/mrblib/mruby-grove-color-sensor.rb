@@ -41,27 +41,37 @@ class GroveColorSensor < I2CDevice
 
   # read_raw() -> [Red,Green,Blue,Clear]
   def read_raw
+    r,g,b,c = 0,0,0,0
     if @i2c
       @i2c.write @addr,[TCS34725_COMMAND_BIT|TCS34725_AUTO_INC|TCS34725_RDATAL]
-      v = @i2c.read @addr,2
-      r = v[0].ord + v[1].ord*256
+      v = read_safe(@addr, 2)
+      if v.length == 2
+        r = v[0].ord + v[1].ord*256
+      end
 
       @i2c.write @addr,[TCS34725_COMMAND_BIT|TCS34725_AUTO_INC|TCS34725_GDATAL]
-      v = @i2c.read @addr,2
-      g = v[0].ord + v[1].ord*256
+      v = read_safe(@addr, 2)
+      if v.length == 2
+        g = v[0].ord + v[1].ord*256
+      end
 
       @i2c.write @addr,[TCS34725_COMMAND_BIT|TCS34725_AUTO_INC|TCS34725_BDATAL]
-      v = @i2c.read @addr,2
-      b = v[0].ord + v[1].ord*256
+      v = read_safe(@addr, 2)
+      if v.length == 2
+        b = v[0].ord + v[1].ord*256
+      end
 
       @i2c.write @addr,[TCS34725_COMMAND_BIT|TCS34725_AUTO_INC|TCS34725_CDATAL]
-      v = @i2c.read @addr,2
-      c = v[0].ord + v[1].ord*256
+      v = read_safe(@addr, 2)
+      if v.length == 2
+        c = v[0].ord + v[1].ord*256
+      end
 
-      return [r,g,b,c]
-    else
-      return [100,200,300,400]
+    #   return [r,g,b,c]
+    # else
+    #   return [100,200,300,400]
     end
+    return [r,g,b,c]
   end
 
   # read() -> [Red,Green,Blue,Clear]
