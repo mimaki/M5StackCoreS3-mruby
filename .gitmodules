@@ -9,4 +9,4 @@
 	url = https://github.com/mruby/mruby.git
 [submodule "components/M5CUtil"]
 	path = components/M5CUtil
-	url = https://github.com/mimaki/M5CUtil.git
+	url = https://github.com/mruby-Forum/M5CUtil.git

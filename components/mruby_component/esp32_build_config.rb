@@ -80,17 +80,7 @@ MRuby::CrossBuild.new('esp32') do |conf|
   conf.gem :core => "mruby-random"
   conf.gem :core => "mruby-time"
 
-  conf.gem :git => "https://github.com/mimaki/mruby-stdio.git"
-  # conf.gem :git => "https://github.com/mimaki/mruby-stdio-m5stack.git"
-  # conf.gem :git => "https://github.com/mimaki/mruby-sleep-esp32.git"
-  # conf.gem :git => "https://github.com/mimaki/mruby-lcd-m5stack.git"
-  # conf.gem :git => "https://github.com/mimaki/mruby-button-m5stack.git"
-  # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-gpio.git"
-  # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-digitalio.git"
-  # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-digitalio-esp32.git"
-  # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-i2c.git"
-  # conf.gem :git => "https://github.com/mruby-plato-mgem/mruby-plato-i2c-esp32.git"
-  # conf.gem :git => "https://github.com/mimaki/mruby-m5stack-i2c.git"
+  conf.gem :git => "https://github.com/mruby-Forum/mruby-stdio.git"
 
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-gpio"
   conf.gem :core => "../../../../mrbgems/mruby-m5stack-pwm"
