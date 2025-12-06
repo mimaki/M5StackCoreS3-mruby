@@ -77,7 +77,8 @@ CoolTermなどのターミナルソフトでM5Stack CoreS3に接続します。
 |Enter Key|LF|
 
 M5Stack CoreS3をリセットすると、REPL(mirb)モードで起動します。
-ターミナルからの対話形式で、mrubyスクリプトを実行することができます。
+
+CooltermからConnectすることでmirbを実行する（mrubyスクリプトを実行する）ことができます。
 
 ### mrubyアプリの実行
 
