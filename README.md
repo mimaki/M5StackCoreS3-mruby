@@ -2,7 +2,7 @@
 
 ## はじめに
 
-M5StackCoreS3-mruby は、[M5Stack CoreS3](https://docs.m5stack.com/ja/core/CoreS3) 上で [mruby](https://github.com/mruby/mruby) を動作させるためのサンプルプロジェクトです。
+M5StackCoreS3-mruby は、[M5Stack CoreS3](https://docs.m5stack.com/ja/core/CoreS3) 上で [mruby3.4.0](https://mruby.org/releases/2025/04/20/mruby-3.4.0-released.html) を動作させるためのサンプルプロジェクトです。
 ESP-IDF（v5.5）と M5Unified をベースにしており、CoreS3 の基本的なデバイス機能（LCD、SDカードアクセスなど）へ Ruby スクリプトからアクセスできる環境を提供します。
 
 本プロジェクトは以下を目的としています。
