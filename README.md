@@ -68,10 +68,12 @@ CoolTermなどのターミナルソフトでM5Stack CoreS3に接続します。
 
 |項目|設定値|
 |:--|:-:|
+|Port|お使いの環境に合わせて選択|
 |Baudrate|115200|
 |Data bits|8|
 |Parity|None|
 |Stop bits|1|
+|terminal mode|line mode|
 |Enter Key|LF|
 
 M5Stack CoreS3をリセットすると、REPL(mirb)モードで起動します。
