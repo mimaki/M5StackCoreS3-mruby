@@ -30,6 +30,9 @@ ESP-IDF（v5.5）と M5Unified をベースにしており、CoreS3 の基本的
 1. ESP-IDF のセットアップ
 
 ESP-IDF 5.5 をインストールし、環境変数を有効化します。
+
+参考までにESP-IDFの [Get started](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/index.html)
+
 ```sh
 . $HOME/esp/esp-idf/export.sh
 ```
