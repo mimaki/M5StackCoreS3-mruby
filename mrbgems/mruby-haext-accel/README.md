@@ -1,4 +1,4 @@
-# HAext
+# HAExt
 M5Stack CoreS3 IoT 内蔵の加速度センサを操作するクラス。
 
 ### メソッド
