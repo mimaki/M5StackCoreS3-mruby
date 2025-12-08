@@ -1,6 +1,4 @@
-
-
-## GroveColorSensor 
+# GroveColorSensor 
 GROVE I2C カラーセンサ v2.0 を操作するクラス。 
 
 ### デバイス情報
