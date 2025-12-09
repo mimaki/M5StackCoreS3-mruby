@@ -169,6 +169,13 @@ M5StackCoreS3-mrubyに搭載している拡張ライブラリ(mrbgems)を以下�
 
 ※ 機能の詳細は準備中です。
 
+#### 搭載されているmruby標準ライブラリ
+- mruby-print
+- mruby-math
+- mruby-time
+- mruby-random
+
+
 ## License
 
 MIT License.
